@@ -26,7 +26,7 @@ jobs:
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/azurecloud:${{ github.sha }}
         - uses: azure/webapps-deploy@v2
           with:
-            app-name: 'azure-cloud-container'
+            app-name: 'webcontainerazurecloud'  #'azure-cloud-container'
             publish-profile: ${{ secrets.AZURE_WEB_APP_PUBLISH_PROFILE }}
             images: '${{ secrets.REGISTRY_LOGIN_SERVER }}/azurecloud:${{ github.sha }}'
         
