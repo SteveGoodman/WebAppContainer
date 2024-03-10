@@ -1,0 +1,43 @@
+name: Trigger auto deployment for ctr-azurecloud
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/ctr-azurecloud-AutoDeployTrigger-365b334a-c807-4db0-840d-dbcc1b7be5d2.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.CTRAZURECLOUD_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: azurecloud.azurecr.io
+          registryUsername: ${{ secrets.CTRAZURECLOUD_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.CTRAZURECLOUD_REGISTRY_PASSWORD }}
+          containerAppName: ctr-azurecloud
+          resourceGroup: rg-dns-azure-cloud
+          imageToBuild: azurecloud.azurecr.io/ctr-azurecloud:${{ github.sha }}
+          
+            
+
+     
+
