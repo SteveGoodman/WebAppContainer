@@ -41,3 +41,13 @@ jobs:
         #     registry-password: ${{ secrets.REGISTRY_PASSWORD }}
         #     name: aci-azurecloud
         #     location: 'west us'
+        - name: Deploy to app container
+          uses: azure/container-apps-deploy-action@v2
+          with:
+            imageToDeploy: ${{ secrets.REGISTRY_LOGIN_SERVER }}/azurecloud:${{ github.sha }}
+            appSourcePath: ${{ github.workspace }} 
+            registryUrl: azurecloud.azurecr.io
+            registryUsername: ${{ secrets.REGISTRY_USERNAME }}
+            registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
+            containerAppName: ctr-azurecloud
+            resourceGroup: rg-dns-azure-cloud
